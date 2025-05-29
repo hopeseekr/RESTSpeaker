@@ -39,13 +39,16 @@ class RESTSpeaker implements ClientInterface
     /** @var HTTPSpeaker Use this when you need the raw GuzzleHTTP. */
     public $http;
 
-    /** @var RESTAuth */
+    /** @var RESTAuthDriver */
     protected $authStrat;
 
     /** @var Response */
     protected $lastResponse;
 
-    public function __construct(RESTAuth $authStrat, string $baseURI = '', HTTPSpeaker $http = null)
+    /** @var string The Content-Type of the request and the expected response. */
+    protected $contentType = 'application/json';
+
+    public function __construct(RESTAuthDriver $authStrat, string $baseURI = '', HTTPSpeaker $http = null)
     {
         $this->authStrat = $authStrat;
 

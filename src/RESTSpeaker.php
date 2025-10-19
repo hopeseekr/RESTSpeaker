@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
+// ==== src/RESTSpeaker.php ====
 
 /**
  * This file is part of RESTSpeaker, a PHP Experts, Inc., Project.
  *
- * Copyright © 2019-2024 PHP Experts, Inc.
+ * Copyright © 2019-2025 PHP Experts, Inc.
  * Author: Theodore R. Smith <theodore@phpexperts.pro>
  *  GPG Fingerprint: 4BF8 2613 1C34 87AC D28F  2AD8 EB24 A91D D612 5690
  *  https://www.phpexperts.pro/
@@ -59,6 +60,21 @@ class RESTSpeaker implements ClientInterface
     }
 
     /**
+     * Sets the Content-Type for the outgoing request and the expected Accept header.
+     * Note: This setting is "sticky" and will be used for all subsequent requests
+     * until it is changed again.
+     *
+     * @param string $contentType The desired content type, e.g., 'application/pdf'.
+     * @return $this
+     */
+    public function setContentType(string $contentType): self
+    {
+        $this->contentType = $contentType;
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param array $arguments
      *
@@ -70,7 +86,10 @@ class RESTSpeaker implements ClientInterface
         // Automagically inject auth headers into the RESTful methods.
         $restOptions = $this->authStrat->generateGuzzleAuthOptions();
         $arguments = $this->http->mergeGuzzleOptions($arguments, [$restOptions]);
-        $arguments[1]['headers']['Content-Type'] = 'application/json';
+
+        // Set the Content-Type and Accept headers based on the configured type.
+        $arguments[1]['headers']['Content-Type'] = $this->contentType;
+        $arguments[1]['headers']['Accept'] = $this->contentType;
 
         $response = $this->http->$name(...$arguments);
         $this->lastResponse = $response;
@@ -82,15 +101,18 @@ class RESTSpeaker implements ClientInterface
                 return null;
             }
 
-            // Attempt to decode JSON, if that's what we got.
-            $decoded = json_decode($responseData);
-            if (!empty($decoded)) {
-                return $decoded;
+            // Attempt to decode JSON only if that's what we expect.
+            if ($this->contentType === 'application/json') {
+                $decoded = json_decode($responseData);
+                // Use json_last_error() for a more robust check than !empty().
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $decoded;
+                }
             }
         }
 
-        // Nothing worked out, so let's return the raw string.
-        return $responseData;
+        // For non-JSON content or failed JSON decoding, return the raw string/data.
+        return $responseData ?? null;
     }
 
     /**

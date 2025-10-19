@@ -231,4 +231,177 @@ class RESTSpeakerTest extends TestCase
     {
         self::assertInstanceOf(\GuzzleHttp\ClientInterface::class, $this->api);
     }
+
+    // ============================================
+    // Content-Type Configuration Tests
+    // ============================================
+
+    /** @testdox Can set and use custom Content-Type headers */
+    public function testCanSetContentType()
+    {
+        $this->guzzleHandler->append(
+            new Response(200, [], 'some data')
+        );
+
+        $result = $this->api->setContentType('application/pdf');
+
+        // Should return self for method chaining
+        self::assertSame($this->api, $result);
+
+        $this->api->get('https://somewhere.com/');
+        $requestHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+
+        self::assertEquals('application/pdf', $requestHeaders['Content-Type'][0]);
+        self::assertEquals('application/pdf', $requestHeaders['Accept'][0]);
+    }
+
+    /** @testdox Content-Type setting is sticky across multiple requests */
+    public function testContentTypeIsStickyAcrossRequests()
+    {
+        $this->api->setContentType('application/xml');
+
+        // First request
+        $this->guzzleHandler->append(new Response(200, [], '<xml/>'));
+        $this->api->get('https://somewhere.com/first');
+        $firstHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+
+        // Second request - should still use the same content type
+        $this->guzzleHandler->append(new Response(200, [], '<xml/>'));
+        $this->api->post('https://somewhere.com/second', null);
+        $secondHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+
+        self::assertEquals('application/xml', $firstHeaders['Content-Type'][0]);
+        self::assertEquals('application/xml', $firstHeaders['Accept'][0]);
+        self::assertEquals('application/xml', $secondHeaders['Content-Type'][0]);
+        self::assertEquals('application/xml', $secondHeaders['Accept'][0]);
+    }
+
+    /** @testdox Does not decode JSON when content type is not JSON */
+    public function testDoesNotDecodeJSONWhenContentTypeIsNotJSON()
+    {
+        $jsonString = '{"hello":"world"}';
+
+        $this->guzzleHandler->append(
+            new Response(200, ['Content-Type' => 'text/plain'], $jsonString)
+        );
+
+        $this->api->setContentType('text/plain');
+        $actual = $this->api->get('https://somewhere.com/');
+
+        // Should return raw string, not decoded object
+        self::assertIsString($actual);
+        self::assertEquals($jsonString, $actual);
+    }
+
+    /** @testdox Returns raw binary data for non-JSON content types */
+    public function testReturnsRawBinaryDataForNonJSONContentTypes()
+    {
+        $pdfData = '%PDF-1.4 binary content here...';
+
+        $this->guzzleHandler->append(
+            new Response(200, ['Content-Type' => 'application/pdf'], $pdfData)
+        );
+
+        $this->api->setContentType('application/pdf');
+        $actual = $this->api->get('https://somewhere.com/document.pdf');
+
+        self::assertEquals($pdfData, $actual);
+    }
+
+    /** @testdox Can change content type back to JSON and resume decoding */
+    public function testCanChangeContentTypeBackToJSON()
+    {
+        // First, use a non-JSON content type
+        $this->api->setContentType('text/plain');
+        $this->guzzleHandler->append(new Response(200, [], 'plain text'));
+        $plainResult = $this->api->get('https://somewhere.com/plain');
+        self::assertIsString($plainResult);
+
+        // Now switch back to JSON
+        $this->api->setContentType('application/json');
+        $jsonString = '{"decoded":"json"}';
+        $this->guzzleHandler->append(
+            new Response(200, ['Content-Type' => 'application/json'], $jsonString)
+        );
+        $jsonResult = $this->api->get('https://somewhere.com/json');
+
+        // Should be decoded as an object
+        self::assertIsObject($jsonResult);
+        self::assertEquals('json', $jsonResult->decoded);
+    }
+
+    /** @testdox Supports method chaining with setContentType */
+    public function testSupportsMethodChainingWithSetContentType()
+    {
+        $this->guzzleHandler->append(
+            new Response(200, [], 'data')
+        );
+
+        // Chain setContentType with a request
+        $result = $this->api
+            ->setContentType('application/xml')
+            ->get('https://somewhere.com/');
+
+        $requestHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+        self::assertEquals('application/xml', $requestHeaders['Content-Type'][0]);
+        self::assertEquals('data', $result);
+    }
+
+    /** @testdox Sets Content-Type on POST, PUT, and PATCH requests */
+    public function testSetsContentTypeOnAllHTTPMethods()
+    {
+        $methods = ['post', 'put', 'patch'];
+
+        $this->api->setContentType('application/xml');
+
+        foreach ($methods as $method) {
+            $this->guzzleHandler->append(new Response(200, [], '<response/>'));
+
+            $this->api->$method('https://somewhere.com/', ['data' => 'test']);
+            $requestHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+
+            self::assertEquals('application/xml', $requestHeaders['Content-Type'][0],
+                "Content-Type should be set for $method");
+            self::assertEquals('application/xml', $requestHeaders['Accept'][0],
+                "Accept header should be set for $method");
+        }
+    }
+
+    /** @testdox Default content type is application/json */
+    public function testDefaultContentTypeIsApplicationJson()
+    {
+        $this->guzzleHandler->append(
+            new Response(200, ['Content-Type' => 'application/json'], '{"test":"value"}')
+        );
+
+        // Don't set content type - use default
+        $result = $this->api->get('https://somewhere.com/');
+
+        // Should decode JSON by default
+        self::assertIsObject($result);
+        self::assertEquals('value', $result->test);
+
+        $requestHeaders = $this->guzzleHandler->getLastRequest()->getHeaders();
+        self::assertEquals('application/json', $requestHeaders['Content-Type'][0]);
+        self::assertEquals('application/json', $requestHeaders['Accept'][0]);
+    }
+
+    /** @testdox Can retrieve the authentication strategy */
+    public function testCanGetTheAuthStrat()
+    {
+        $authStrat = $this->api->getAuthStrat();
+
+        self::assertInstanceOf(\PHPExperts\RESTSpeaker\RESTAuthDriver::class, $authStrat);
+    }
+
+    /** @testdox getAuthStrat returns the same instance passed to constructor */
+    public function testGetAuthStratReturnsSameInstance()
+    {
+        $customAuth = TestHelper::buildRESTAuthMock();
+        $api = new RESTSpeaker($customAuth);
+
+        $retrievedAuth = $api->getAuthStrat();
+
+        self::assertSame($customAuth, $retrievedAuth);
+    }
 }

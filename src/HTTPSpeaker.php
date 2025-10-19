@@ -153,8 +153,8 @@ class HTTPSpeaker implements ClientInterface
     }
 
     /** {@inheritDoc} */
-    public function getConfig($option = null)
+    public function getConfig(?string $option = null)
     {
-        return $this->http->getConfig();
+        return $this->http->getConfig($option);
     }
 }

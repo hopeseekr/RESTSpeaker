@@ -1,6 +1,7 @@
 .env
 /vendor
 /.idea
+/coverage
 composer.lock
 .phpunit.result.cache
 

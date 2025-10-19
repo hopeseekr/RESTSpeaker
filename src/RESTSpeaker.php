@@ -202,7 +202,7 @@ class RESTSpeaker implements ClientInterface
     /** {@inheritDoc} */
     public function getConfig($option = null)
     {
-        return $this->http->getConfig();
+        return $this->http->getConfig($option);
     }
 
     public function getAuthStrat(): RESTAuthDriver

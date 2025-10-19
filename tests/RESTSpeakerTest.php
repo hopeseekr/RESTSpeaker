@@ -404,4 +404,15 @@ class RESTSpeakerTest extends TestCase
 
         self::assertSame($customAuth, $retrievedAuth);
     }
+
+    public function testCanGetTheFullGuzzleConfig()
+    {
+        $config = $this->api->getConfig();
+
+        self::assertIsArray($config);
+
+        self::assertArrayHasKey('decode_content', $config);
+        self::assertTrue($config['http_errors']);
+        self::assertArrayHasKey('handler', $config);
+    }
 }

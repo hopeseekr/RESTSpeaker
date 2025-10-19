@@ -172,4 +172,46 @@ class RESTAuthTest extends TestCase
 
         // Will use the native env() by default, if env() is available.
     }
+
+    public function testGenerateOAuth2TokenOptionsThrowsLogicException(): void
+    {
+        $auth = new class(RESTAuth::AUTH_MODE_XAPI) extends RESTAuth {
+            public function authenticate(): array
+            {
+                return [];
+            }
+
+            // Expose protected method for testing
+            public function testGenerateOAuth2TokenOptions(): array
+            {
+                return $this->generateOAuth2TokenOptions();
+            }
+        };
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The base RestAuth should not be called.');
+
+        $auth->testGenerateOAuth2TokenOptions();
+    }
+
+    public function testGeneratePasskeyOptionsThrowsLogicException(): void
+    {
+        $auth = new class(RESTAuth::AUTH_MODE_XAPI) extends RESTAuth {
+            public function authenticate(): array
+            {
+                return [];
+            }
+
+            // Expose protected method for testing
+            public function testGeneratePasskeyOptions(): array
+            {
+                return $this->generatePasskeyOptions();
+            }
+        };
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The base RestAuth should not be called.');
+
+        $auth->testGeneratePasskeyOptions();
+    }
 }

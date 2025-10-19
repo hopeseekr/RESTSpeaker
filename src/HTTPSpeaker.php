@@ -32,22 +32,17 @@ use Psr\Http\Message\ResponseInterface;
  */
 class HTTPSpeaker implements ClientInterface
 {
-    /** @var iGuzzleClient|GuzzleClient */
-    protected $http;
+    protected iGuzzleClient $http;
 
-    /** @var string */
-    protected $mimeType = 'text/html';
+    protected string $mimeType = 'text/html';
 
-    /** @var Response|null */
-    protected $lastResponse;
+    protected ?Response $lastResponse = null;
 
-    /** @var HandlerStack */
-    public $guzzleMiddlewareStack;
+    public HandlerStack $guzzleMiddlewareStack;
 
-    /** @var TestHandler */
-    public $testHandler;
+    public ?TestHandler $testHandler = null;
 
-    public $enableCuzzle = true;
+    public bool $enableCuzzle = true;
 
     public function __construct(string $baseURI = '', ?iGuzzleClient $guzzle = null)
     {

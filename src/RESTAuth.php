@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+// ==== ./src/RESTAuth.php ====
 
 /**
  * This file is part of RESTSpeaker, a PHP Experts, Inc., Project.
@@ -34,11 +35,9 @@ abstract class RESTAuth implements RESTAuthDriver
         self::AUTH_MODE_CUSTOM,
     ];
 
-    /** @var RESTSpeaker|null */
-    protected $api;
+    protected ?RESTSpeaker $api = null;
 
-    /** @var string */
-    protected $authMode;
+    protected string $authMode;
 
     public function __construct(string $authStratMode, ?RESTSpeaker $apiClient = null)
     {

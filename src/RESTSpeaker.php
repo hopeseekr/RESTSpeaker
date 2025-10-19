@@ -37,17 +37,15 @@ use Psr\Http\Message\UriInterface;
 */
 class RESTSpeaker implements ClientInterface
 {
-    /** @var HTTPSpeaker Use this when you need the raw GuzzleHTTP. */
-    public $http;
+    /** Use this when you need the raw GuzzleHTTP. */
+    public HTTPSpeaker $http;
 
-    /** @var RESTAuthDriver */
-    protected $authStrat;
+    protected RESTAuthDriver $authStrat;
 
-    /** @var Response */
-    protected $lastResponse;
+    protected ?Response $lastResponse = null;
 
-    /** @var string The Content-Type of the request and the expected response. */
-    protected $contentType = 'application/json';
+    /** The Content-Type of the request and the expected response. */
+    protected string $contentType = 'application/json';
 
     public function __construct(RESTAuthDriver $authStrat, string $baseURI = '', ?HTTPSpeaker $http = null)
     {

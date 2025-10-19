@@ -19,11 +19,9 @@ class NoAuth implements RESTAuthDriver
 {
     public const AUTH_NONE = 'NoAuth';
 
-    /** @var RESTSpeaker|null */
-    protected $api;
+    protected ?RESTSpeaker $api = null;
 
-    /** @var string */
-    protected $authMode;
+    protected string $authMode;
 
     public function __construct(?RESTSpeaker $apiClient = null)
     {

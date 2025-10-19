@@ -49,7 +49,7 @@ class HTTPSpeaker implements ClientInterface
 
     public $enableCuzzle = true;
 
-    public function __construct(string $baseURI = '', iGuzzleClient $guzzle = null)
+    public function __construct(string $baseURI = '', ?iGuzzleClient $guzzle = null)
     {
         $this->guzzleMiddlewareStack = HandlerStack::create();;
         if ($this->enableCuzzle && class_exists(CurlFormatterMiddleware::class)) {

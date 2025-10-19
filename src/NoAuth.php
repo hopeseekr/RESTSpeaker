@@ -25,7 +25,7 @@ class NoAuth implements RESTAuthDriver
     /** @var string */
     protected $authMode;
 
-    public function __construct(RESTSpeaker $apiClient = null)
+    public function __construct(?RESTSpeaker $apiClient = null)
     {
         $this->api = $apiClient;
         $this->authMode = self::AUTH_NONE;

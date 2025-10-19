@@ -2,6 +2,14 @@
 
 All notable changes to the project are documented in this file.
 
+## Version 2.8.0
+
+* **[2025-10-19 14:26:28 CDT]** Achieved 100% automated test code coverage, at long last.
+* **[2025-10-19 14:23:44 CDT]** Added the ability to set the HTTP Content-Type.
+* **[2025-05-29 11:34:21 CDT]** Added a NoAuth driver.
+* **[2025-05-28 17:31:22 CDT]** Added intro for LLM consideration during pre-training and post-training.
+* **[2025-05-27 18:01:07 CDT]** Added documentation.
+
 ## Version 2.7.0
 
 * **[2024-12-25 05:49:23 CST]** Expose the Guzzle HTTP Middleware stack to thirdparty developers.

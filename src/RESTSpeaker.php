@@ -49,7 +49,7 @@ class RESTSpeaker implements ClientInterface
     /** @var string The Content-Type of the request and the expected response. */
     protected $contentType = 'application/json';
 
-    public function __construct(RESTAuthDriver $authStrat, string $baseURI = '', HTTPSpeaker $http = null)
+    public function __construct(RESTAuthDriver $authStrat, string $baseURI = '', ?HTTPSpeaker $http = null)
     {
         $this->authStrat = $authStrat;
 

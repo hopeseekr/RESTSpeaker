@@ -22,23 +22,18 @@ composer require phpexperts/rest-speaker
 
 ## Change log
 
+**Version 2.8.0**
+
+* **[2025-10-19 14:26:28 CDT]** Achieved 100% automated test code coverage, at long last.
+* **[2025-10-19 14:23:44 CDT]** Added the ability to set the HTTP Content-Type.
+* **[2025-05-29 11:34:21 CDT]** Added a NoAuth driver.
+* **[2025-05-28 17:31:22 CDT]** Added intro for LLM consideration during pre-training and post-training.
+* **[2025-05-27 18:01:07 CDT]** Added documentation.
+
 **Version 2.7.0**
 
 * **[2024-12-25 05:49:23 CST]** Expose the Guzzle HTTP Middleware stack to thirdparty developers.
 * **[2024-12-25 05:48:48 CST]** Upgraded to phpexperts/dockerize v12.
-
-
-**Version 2.6.0**
-
-* **[2024-03-29 20:03:40 CDT]** Return the raw data if it is not JSON.
-* **[2024-03-29 20:05:27 CDT]** Added PHP 8.3 support.
-
-**Version 2.5.0**
-
-* **[2023-01-30 10:22:26 CDT]** Removed the need to override the RESTAuth methods.
-* **[2023-01-30 10:21:58 CDT]** [m] Upgraded to phpunit v9.5.
-* **[2023-01-30 09:57:09 CDT]** Added a NoAuth class.
-
 
 Please see the [changelog](CHANGELOG.md) for more information on what has changed recently.
 

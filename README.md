@@ -12,6 +12,8 @@ via the Composition architectural pattern.
 It further extends base Guzzle so that it automagically decodes
 JSON responses and is much easier to work with.
 
+Translations: [中文](README.cn.md), [हिन्दी](README.hi.md), [es](README.es.md)
+
 ## Installation
 
 Via Composer
@@ -119,37 +121,83 @@ Please see the [changelog](CHANGELOG.md) for more information on what has change
 
 # Use cases
 
-PHPExperts\RESTSpeaker\Tests\HTTPSpeaker  
- ✔ Works as a Guzzle proxy  
- ✔ Identifies as its own user agent  
- ✔ Requests the text/html Content-Type  
- ✔ Can get the last raw response  
- ✔ Can get the last status code  
+HTTPSpeaker (PHPExperts\RESTSpeaker\Tests\HTTPSpeaker)
+✔ Works as a Guzzle proxy
+✔ Identifies as its own user agent
+✔ Requests text html content type
+✔ Can get the last raw response
+✔ Can get the last status code
+✔ Implements Guzzle's PSR-18 ClientInterface interface. *
+✔ Supports logging all requests with cuzzle
+✔ Can get the full guzzle config
+✔ Can get specific guzzle config option
 
-PHPExperts\RESTSpeaker\Tests\RESTAuth  
- ✔ Cannot build itself  
- ✔ Children can build themselves  
- ✔ Will not allow invalid auth modes  
- ✔ Can set a custom api client  
- ✔ Wont call a nonexisting auth strat  
- ✔ Supports no auth  
- ✔ Supports XAPI Token auth  
- ✔ Supports custom auth strategies  
- ✔ Has its own env() polyfill  
- ✔ Implements Guzzle's PSR-18 ClientInterface interface.  
+No Auth (PHPExperts\RESTSpeaker\Tests\NoAuth)
+✔ Can be instantiated
+✔ Returns no auth options
+✔ Can be instantiated with a RESTSpeaker client
+✔ Can be instantiated without a RESTSpeaker client
+✔ setApiClient() sets the API client
+✔ setApiClient() can replace existing client
+✔ AUTH_NONE constant is defined
+✔ generateGuzzleAuthOptions always returns empty array
+✔ generateGuzzleAuthOptions returns empty array even with API client set
+✔ Can be used with RESTSpeaker without authentication
+✔ Protected generateOAuth2TokenOptions returns empty array
+✔ Protected generatePasskeyOptions returns empty array
+✔ NoAuth implements RESTAuthDriver interface
+✔ NoAuth can be constructed and used in a fluent chain
 
-PHPExperts\RESTSpeaker\Tests\RESTSpeaker  
- ✔ Can build itself  
- ✔ Returns null when no content  
- ✔ Returns exact unmodified data when not JSON 
- ✔ JSON URLs return plain PHP arrays  
- ✔ Can fall down to HTTPSpeaker  
- ✔ Requests the application/json Content-Type  
- ✔ Can get the last raw Guzzle response  
- ✔ Can get the last status code  
- ✔ Will automagically pass arrays as JSON via POST, PATCH and PUT.  
- ✔ Will automagically pass objects as JSON via POST, PATCH and PUT.  
- ✔ Implements Guzzle's PSR-18 ClientInterface interface.  
+RESTAuth (PHPExperts\RESTSpeaker\Tests\RESTAuth)
+✔ Cannot build itself
+✔ Children can build themselves
+✔ Will not allow invalid auth modes
+✔ Can set a custom api client
+✔ Wont call a nonexisting auth strat
+✔ Supports no auth
+✔ Supports XAPI Token auth
+✔ Supports custom auth strategies
+✔ Uses the laravel env polyfill
+✔ Generate o auth 2 token options throws logic exception
+✔ Generate passkey options throws logic exception
+
+RESTSpeaker (PHPExperts\RESTSpeaker\Tests\RESTSpeaker)
+✔ Can build itself
+✔ Returns null when no content
+✔ Returns exact unmodified data when not JSON
+✔ JSON URLs return plain PHP arrays
+✔ Can fall down to HTTPSpeaker
+✔ Requests application json content type
+✔ Can get the last raw response
+✔ Can get the last status code
+✔ Will automagically pass arrays as JSON via POST, PATCH and PUT.
+✔ Will automagically pass objects as JSON via POST, PATCH and PUT.
+✔ Implements Guzzle's PSR-18 ClientInterface interface. *
+✔ Can set and use custom Content-Type headers
+✔ Content-Type setting is sticky across multiple requests
+✔ Does not decode JSON when content type is not JSON
+✔ Returns raw binary data for non-JSON content types
+✔ Can change content type back to JSON and resume decoding
+✔ Supports method chaining with setContentType
+✔ Sets Content-Type on POST, PUT, and PATCH requests
+✔ Default content type is application/json
+✔ Can retrieve the authentication strategy
+✔ getAuthStrat returns the same instance passed to constructor
+✔ Can get the full guzzle config
+
+Tests for Guzzle ClientInterface methods
+✔ send() delegates to HTTPSpeaker and returns ResponseInterface
+✔ send() passes options through correctly
+✔ sendAsync() returns a PromiseInterface
+✔ sendAsync() passes options through correctly
+✔ request() delegates to HTTPSpeaker and returns ResponseInterface
+✔ request() works with all HTTP methods
+✔ request() passes options through correctly
+✔ requestAsync() returns a PromiseInterface
+✔ requestAsync() works with all HTTP methods
+✔ requestAsync() passes options through correctly
+✔ Low-level methods work with full URIs
+✔ send() handles PSR-7 Request objects correctly
 
 ## Testing
 

@@ -24,6 +24,11 @@ composer require phpexperts/rest-speaker
 
 ## Change log
 
+**Version 3.0.0**
+* **[2025-10-19 15:30:28 CDT]** Added translations in Chinese, Hindi, and Spanish.
+* **[2025-10-19 15:29:54 CDT]** Added support for PHPUnit v10 and v11.
+* **[2025-10-19 15:28:22 CDT]** Made PHP 7.4 the minimum supported version.
+
 **Version 2.8.0**
 
 * **[2025-10-19 14:26:28 CDT]** Achieved 100% automated test code coverage, at long last.

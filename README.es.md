@@ -20,6 +20,12 @@ composer require phpexperts/rest-speaker
 
 ## Registro de cambios
 
+**Versión 3.0.0**
+
+* **[2025-10-19 15:30:28 CDT]** Se agregaron traducciones al chino, hindi y español.
+* **[2025-10-19 15:29:54 CDT]** Se agregó soporte para PHPUnit v10 y v11.
+* **[2025-10-19 15:28:22 CDT]** Se estableció PHP 7.4 como la versión mínima soportada.
+
 **Versión 2.8.0**
 
 * **[19 de octubre de 2025, 14:26 CDT]** Se alcanzó el 100% de cobertura de pruebas automatizadas, ¡por fin!
